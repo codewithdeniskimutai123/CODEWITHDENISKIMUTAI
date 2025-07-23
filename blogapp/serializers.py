@@ -21,7 +21,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-            email = validated_data['email']
             username = validated_data['username']
             first_name = validated_data['first_name']
             last_name = validated_data['last_name']
@@ -29,7 +28,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
             
-            new_user = User.objects.create(email=email, username=username, 
+            new_user = User.objects.create(username=username, 
                                            first_name=first_name, last_name=last_name)
             
             new_user.set_password(password)
@@ -40,7 +39,7 @@ class SimpleAutherSerializer(serializers.ModelSerializer):
      
      class Meta:
           model = get_user_model()
-          fields = ['id', 'username', 'first_name', 'last_name']
+          fields = ['id', 'username', 'first_name', 'last_name', 'profile_picture']
     
 class BlogSerializer(serializers.ModelSerializer):
      author = SimpleAutherSerializer(read_only=True)

@@ -43,13 +43,14 @@ class Blog(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        base_slug = slugify(self.title)
-        slug = base_slug
-        num = 1
-        while Blog.objects.filter(slug=slug).exists():
-            slug = f'{base_slug} - {num}'
-            num += 1
-        self.slug = slug
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            num = 1
+            while Blog.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug=f'{base_slug}-{num}' 
+                num += 1
+            self.slug = slug
 
         if not self.is_draft and self.publish_date is None:
             self.publish_date = timezone.now()
