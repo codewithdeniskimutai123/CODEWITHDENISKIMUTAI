@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from corsheaders.defaults import default_headers
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -187,4 +189,12 @@ CORS_ALLOWED_ORIGINS = [
 "http://localhost:5175",
 "https://prokim.onrender.com"
 
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Content-Type',
+    'Authorization',
 ]
