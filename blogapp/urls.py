@@ -18,6 +18,7 @@ urlpatterns = [
     path('blogs/<slug:slug>/', views.get_blog, name="get_blog"),
     path('update_blog/<str:pk>/', views.update_blog, name="update_blog"),
     path('delete_blog/<str:pk>/', views.delete_blog, name="delete_blog"),
+    path('get_username/', views.get_username, name="get_username"),
 
 
 

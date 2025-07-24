@@ -82,3 +82,10 @@ def delete_blog(request, pk):
 
      return Response({"blog deleted sucessfully"}, status=status.HTTP_204_NO_CONTENT)
 
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_username(request):
+    user = request.user
+    username = user.username
+    return Response({"username": username})
