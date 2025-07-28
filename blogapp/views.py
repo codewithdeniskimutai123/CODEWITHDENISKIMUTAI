@@ -1,11 +1,17 @@
 from django.shortcuts import render
-from .serializers import UserRegistrationSerializer, BlogSerializer, UpdateUserProfileSerializer
+from .serializers import UserRegistrationSerializer, BlogSerializer, UpdateUserProfileSerializer, UserInfoSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Blog
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth import get_user_model
+from .serializers import UserInfoSerializer
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+
+
 # Create your views here.
 class BlogListPagination(PageNumberPagination):
     page_size = 2
@@ -22,9 +28,10 @@ def register_user(request):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def update_user_profile(request):
     user = request.user
-    serializer = UpdateUserProfileSerializer(user, data=request.data)
+    serializer = UpdateUserProfileSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -89,3 +96,17 @@ def get_username(request):
     user = request.user
     username = user.username
     return Response({"username": username})
+
+
+@api_view(["GET"])
+def get_userInfo(request, username):
+    User = get_user_model()
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+    serializer = UserInfoSerializer(user)
+    return Response(serializer.data)
+
+
+

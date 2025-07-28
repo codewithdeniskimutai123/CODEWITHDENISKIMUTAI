@@ -8,7 +8,7 @@ User = get_user_model()
 class UpdateUserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "username", "first_name", "last_name", "password", "bio", "profile_picture","facebook", "youtube","instagram", "twitter"]
+        fields = ["email", "username", "first_name", "last_name", "password","job_title", "bio", "profile_picture","facebook", "youtube","instagram", "twitter"]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -46,5 +46,25 @@ class BlogSerializer(serializers.ModelSerializer):
      class Meta:
         model = Blog
         fields = ["id","title","slug", "content", "author", "created_at", "updated_at", "publish_date", "is_draft", "category", "featured_image"]
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
      
+     author_posts = serializers.SerializerMethodField()
+     class Meta:
+          model = get_user_model()
+          fields = ['id', 'username', 'first_name', 'last_name', 'job_title','bio', 'profile_picture', 'author_posts']
+    
+
+     def get_author_posts(self, user):
+            blogs = Blog.objects.filter(author=user)[:9]
+            serializer = BlogSerializer(blogs, many=True)
+            return serializer.data
+           
+            
+            
+              
+
+    
+
      
